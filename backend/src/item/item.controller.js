@@ -6,14 +6,14 @@ const findAll = async (req, res) =>{
     res.send(items);
 };
 
-const findById = (req, res) => {
+const findById = async (req, res) => {
     const id = req.params.id;
 
     if(!isObjectIdValid(id)){
         return res.status(400).send({message : "ID invalido!"})
     }
 
-    const item = {};
+    const item = await service.findById(id);
 
     if(!item){
         return res.status(404).send({message: "Item não encontrado"});
@@ -35,7 +35,7 @@ const create = async (req, res) => {
 
 };
 
-const update = (req, res) => {
+const update = async(req, res) => {
     const id = req.params.id;
 
     if(!isObjectIdValid(id)){
@@ -48,24 +48,24 @@ const update = (req, res) => {
         return res.status(400).send({message : "Dados invalidos!"});
     }
 
-    const updatedItem = {};
+    const updatedItem = await service.update(id, item);
 
     if(!updatedItem){
-        return res.send(404).send({messagem:"Item não encontrado!"});
+        return res.status(404).send({messagem:"Item não encontrado!"});
     }
 
     res.send({message: "Item atualizado com sucesso!" });
 
 };
 
-const deleteById = (req, res) => {
+const deleteById = async (req, res) => {
     const id = req.params.id;
 
     if(!isObjectIdValid(id)){
         return res.status(400).send({message : "ID invalido!"});
     }
 
-    const deletedItem = {};
+    const deletedItem = await service.deleteById(id);
 
     if(!deletedItem){
         return res.status(400).send({message : "Item não encontrado!"});
